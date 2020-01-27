@@ -1,0 +1,110 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;\f2\fswiss\fcharset0 Helvetica-Oblique;
+}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww15480\viewh8080\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qc\partightenfactor0
+
+\f1\b\fs28 \cf0 README for Assignment 3 COMP521\
+Rikke Aas
+\f0\b0\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+
+\f1\b\fs36 Overview:
+\f0\b0\fs24 \
+
+\f1\b Important scripts (in no particular order):
+\f0\b0 \
+- GameController.cs : controls speed and pausing/unpausing.\
+- TraderHandler.cs : assigns names (and thus roles) to the trader game objects at runtime. Also keeps track of which is which of the traders.\
+- Thief.cs : deals with all thieving logic and the NavMesh navigation of the thief (black box)\
+- Caravan.cs : keeps track of the spices that are deposited, reclaimed and stolen from the caravan\
+- Progress.cs : fetches info from the caravan and the player to dynamically display the world state in the red table.\
+- Player.cs : keeps track of the inventory of the player and also the NavMesh navigation of the player.\
+- Plan.cs : script to display the current plan of the player to the left of the game world\
+- MyGOAP.cs : Deals with the GOAP aspect of the player (executing plans and deciding when to replan and with which goal)\
+- Graph.cs : Builds the actual action graph based on a world state and a goal state provided by MyGOAP.cs. Also pathfinds to give a plan.\
+- AbstractAction.cs : General behaviour of the actions, including execution, checking preconditions, etc..\
+\
+
+\f1\b\fs36 GOAP Description
+\f0\b0\fs24 :\
+
+\f2\i All GOAP logic is in the two scripts: MyGOAP.cs and Graph.cs. \
+MyGOAP.cs hold a list of the goals and a list of all possible actions.
+\f0\i0 \
+\
+My 
+\f1\b world state
+\f0\b0  is a combination of the inventory of the player and the contents of the caravan. Both are represented by int-arrays of size 7 where the number at index 0 represents how many Turmeric units the inventory or caravan has, and so on for the rest of the numbers.\
+(0 - turmeric, 1 - saffron, 2 - cardamom, 3 - cinnamon, 4 - cloves, 5 - pepper, 6 - sumac)\
+\
+I chose to define
+\f1\b  7 goals
+\f0\b0 , one for each spice. When the player-AI is planning it loops through the goals to find the first one that is not fulfilled. This way the planner can easily cope with thieving or the AI reclaiming spices of which the goal had been fulfilled. \
+The goals are represented as int-arrays of size 7, and each number in the array specifies how many units of each spice the caravan must at least have to fulfil the goal. (Spices represented by same indexes as above).\
+When all goal are simultaneously fulfilled, the planner stops planning, and a message is displayed where the plan used to be in the UI.\
+\
+There are quite a few 
+\f1\b actions 
+\f0\b0 the AI can do. I split them into three categories: trader actions, deposit actions, and reclaim actions. All actions inherit from the abstract class AbstractAction.cs. Deposit actions also inherit from the abstract class ActionDeposit.cs, Reclaim actions also inherit fro the abstract class ActionReclaim.cs.\
+\
+The 
+\f1\b trader actions 
+\f0\b0 are: (the inventory preconditions and postconditions are as defined in the assignment, they have no caravan preconditions or postconditions because they don\'92t do anything with the contents of the caravan)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}ActionTrader1\
+{\listtext	\uc0\u8226 	}ActionTrader2\
+{\listtext	\uc0\u8226 	}\'85\
+{\listtext	\uc0\u8226 	}ActionTrader8\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+The 
+\f1\b deposit actions
+\f0\b0  are: (these let the player deposit one unit of a given spice from inventory to the caravan, inventory preconditions are that the player has at least one of the given spice, inventory postconditions are that the inventory will have one less of the given spice, there are no caravan preconditions, and the caravan postconditions are that the caravan has one more of the given spice)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}DepositTu\
+{\listtext	\uc0\u8226 	}DepositSa\
+{\listtext	\uc0\u8226 	}\'85\
+{\listtext	\uc0\u8226 	}DepositSu\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+The 
+\f1\b reclaim actions 
+\f0\b0 are: (these let the player reclaim one unit of a given spice from the caravan, inventory preconditions are that the player has room for one more spice (size strictly less than 4), inventory postconditions are that the inventory has one more of the given spice, caravan preconditions are that the caravan has at least one of the given spice, caravan post conditions are that the caravan has one less of the given spice)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}ReclaimTu\
+{\listtext	\uc0\u8226 	}ReclaimSa\
+{\listtext	\uc0\u8226 	}\'85\
+{\listtext	\uc0\u8226 	}ReclaimSu\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+All together there are 22 actions the player can do. I chose not to include an action for moving, this is baked into the above actions.\
+\
+
+\f1\b Planning:
+\f0\b0 \
+When building the graph of actions the planner starts from the current world state and considers all actions that are possible to do from that state (i.e. the actions whose preconditions are satisfied). It stops expanding the graph when at least one of the nodes in the graph will get the AI closer to its goal (see above). Then it does a depth first search through the graph to find a path/plan to a node with a state that is closer to the goal. This might not be the optimal plan, but it gets the AI at least one step closer to its goal.\
+\
+
+\f1\b Thief:\
+
+\f0\b0 Every 5s the thief has a 33% chance of stealing (like specified in the assignment). If thief will steal, it has a 50% chance of stealing from the caravan, otherwise it will steal from the player. If the caravan or the inventory is empty when the thief tries to steal from it, the stealing mission fails and it is not counted as  one of the two stealings the thief should do. \
+If the thief steals from the player, the player doesn\'92t realise and replan until it arrives at its destination and tries to deposit or trade. Maybe it could have replanned right away, but I think it is realistic since my thief is a sneaky pickpocket and the player wouldn\'92t realise until it looks in its bag and sees that the spice is gone.\
+\
+
+\f1\b Ps:
+\f0\b0 \
+- Sorry if the printing to the console is annoying, I found it helpful to see what the thief is doing and I did not have time to add it to the UI.\
+- Use shift + equals to speed up game\
+\
+}

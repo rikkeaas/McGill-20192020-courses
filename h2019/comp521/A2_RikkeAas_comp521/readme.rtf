@@ -1,0 +1,37 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13300\viewh10780\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\
+I have chosen to do this assignment in Java with Processing3. \
+I used the 
+\f1\b IntelliJ IDEA 
+\f0\b0 and 
+\f1\b Java 8
+\f0\b0 . Before running the code it is important to add the Processing3 \'93core.jar\'94 file to the external libraries of the project. To do this in Intellij go to File>Project Structure, then choose Libraries and select the + at the top of the page. Locate the \'93core.jar\'94 file on your computer and hit apply. \
+Mark the \'93src\'94 folder as the source directory and the \'93out\'94 folder as the output directory.\
+\
+To run the project run the Main.java file located in src/Game/Main.java.\
+\
+Structure of the code:\
+Main.jave keeps track of all the different components on the screen.\
+Game.java is responsible for drawing and handling user input (for moving canon and shooting canon balls). Each of the components on the screen have a specific drawing function. At every rendering the screen is wiped and components are redrawn.\
+\
+Task 1 is solved mainly in the src/StoneHenge directory. Each edge of each stone calculates and keeps track of its own Perlin noise, so the interesting part of the 1D Perlin noise implementation is in src/StoneHenge/Edge.java\
+The interpolation formula I am using is taken from http://www.java-gaming.org/topics/solved-smoothly-interpolate-between-two-points/34706/view.html\
+\
+Task 2/3:\
+The canon ball checks for collisions with stone henge before updating its position. It also checks if it is outside the boundaries of the screen, or has lost all velocity. CanonBallHandler.java is a wrapper class for the canon balls so that Game.java can ask for a list of all the canon balls to draw.\
+Wind is modelled as an object that can be asked to generate a new random speed value.\
+\
+Task 4:\
+GhostHandler.java holds a list of all the ghosts. Ghost.java has a list of the points defining it, and the constraints between these points. The constraints are objects holding two points and a length between the points that it want to have.\
+Drawing of the Verlet-ghost with the constraint I added is in the VerletGhostDrawing.jpg\
+\
+Task 5:\
+Collision between ghosts and canon balls are checked for at every rendering (every call to draw() in src/Game/Game.java). The actual calculations are done in the src/Canon/CanonBall.java class, but called from src/Canon/CanonBallHandler.java which in turn is called from src/Game/Game.java. We check for each ghost every canon ball if there is a collision.\
+The calculation is done by the method taught in class to check if two line segments intersect. The line segments in question are each of the line segments defining the outline of the ghost, and the line segment from the canon ball\'92s current position and the next position it will have.}

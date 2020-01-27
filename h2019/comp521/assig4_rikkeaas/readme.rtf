@@ -1,0 +1,65 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww14100\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\qc\partightenfactor0
+
+\fs36 \cf0 Assignment 4 - COMP521\
+
+\fs28 Rikke Aas\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f1\b\fs28 \cf0 In general:
+\f0\b0\fs24 \
+Light blue cylinders are normal 
+\f1\b shoppers
+\f0\b0 , they turn dark blue when flyered.\
+
+\f1\b Advertisers
+\f0\b0  are red at first, then become yellow after one successful pitch, and green after two successful pitches.\
+
+\f1\b Flyers
+\f0\b0  are represented by small red objects on the ground.\
+\
+The values s and r are lower bounded at 1, because that is the minimum possible distance between a shopper and an advertiser (they both have radiuses equal to 0.5).\
+\
+If there are no free seats the shoppers will move towards the exit, but if a seat frees up they will change course and head to the seat.\
+\
+The space key removes food court and redraws it (I used it for debugging, but there will be null pointer exceptions if shoppers had targeted the chairs). \
+\
+
+\f1\b Problems:
+\f0\b0 \
+- The shoppers and advertises sometimes move jerkily, I did not have time to fix it, but it could probably be fixed by adding together the forces in a different way (weighing the different types of steering forces differently). Or maybe by implementing a wandering, instead of seeking random locations.\
+- Instead of entering shops, shoppers stop outside them. I also did not have time to fix this, I prioritised trying to finish the implementation of steering forces, and it works approximately the same (shoppers stop outside the shop, wait for their food 2.5s then find a seat).\
+\
+This is the assignment I have had by far the hardest time with. I struggled a lot with figuring out how to calculate the forces and how to add them together. I also ran out of time which is my own fault.\
+\
+
+\f1\b\fs28 Description of Steering Behaviours:
+\f0\b0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\fs24 \cf0 Shoppers are moved by three forces: a seeking force, an obstacle avoidance force, and a separation force. \
+-The seeking force has either a store or a chair as a target, and if there is no target, the seeking force targets the exit.\
+-The obstacle avoidance force looks for the closest obstacle (planter, table with chairs, or shop). This is done by extrapolating the shoppers position to two points in the future and checking if any of these overlap with an obstacle (modelled as 2d circles in the x-z-plane centred at the obstacles position).\
+-The separation force looks at the shoppers immediate neighbourhood for other shoppers. Then calculates a weighted sum of the vectors from neighbouring shoppers to the shopper (weighted by distance to shopper, high distance gives lower weight than low distance). \
+\
+Advertisers are also moved by three forces: pursuit force, obstacle avoidance, and separation. \
+- Pursuit works like seeking, but with a moving target. (The force is also used to go to random locations when the advertiser doesn\'92t have a target shopper).\
+- Obstacle avoidance works in the same way as above (for shoppers).\
+- Separation for advertisers finds the closest other advertiser to the advertiser (within a certain radius) and adds a force in the opposite direction.\
+\
+For both shoppers and advertisers these forces are weighted and added together, normalised and multiplied by the velocity.\
+\
+\
+\
+}
