@@ -13,6 +13,7 @@ public class q1 {
     public static int k;
 
     private static Random rand = new Random();
+    private static BufferedImage outputimage;
 
     public static void main(String[] args) {
         try {
@@ -31,28 +32,12 @@ public class q1 {
             }
 
             // once we know what size we want we can creat an empty image
-            BufferedImage outputimage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-
-            for(int f = 0; f < 10; f++) {
-                Color randCol = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-                int randColInt = randCol.getRGB();
-                int randSize = rand.nextInt(80);
-
-                int randStartX = rand.nextInt(width - randSize);
-                int randStartY = rand.nextInt(height - randSize);
+            outputimage = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
 
 
-
-                for (int i = randStartX; i <= randStartX + randSize; i++) {
-                    for (int j = randStartY; j <= randStartY + randSize; j++) {
-                        if (i == randStartX || i == randStartX + randSize || j == randStartY || j == randStartY + randSize) {
-                            outputimage.setRGB(i, j, 0xFF000000);
-                        }
-                        else {
-                            outputimage.setRGB(i, j, randColInt);
-                        }
-                    }
-                }
+            for (int i = 0; i < 5; i++) {
+                MyThread t = new MyThread();
+                t.start();
             }
             // ------------------------------------
             // Your code would go here
@@ -81,6 +66,29 @@ public class q1 {
         } catch (Exception e) {
             System.out.println("ERROR " +e);
             e.printStackTrace();
+        }
+    }
+
+    public static void draw() {
+
+        for (int f = 0; f < 10; f++) {
+            Color randCol = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+            int randColInt = randCol.getRGB();
+            int randSize = rand.nextInt(80);
+
+            int randStartX = rand.nextInt(width - randSize);
+            int randStartY = rand.nextInt(height - randSize);
+
+
+            for (int i = randStartX; i <= randStartX + randSize; i++) {
+                for (int j = randStartY; j <= randStartY + randSize; j++) {
+                    if (i == randStartX || i == randStartX + randSize || j == randStartY || j == randStartY + randSize) {
+                        outputimage.setRGB(i, j, 0xFF000000);
+                    } else {
+                        outputimage.setRGB(i, j, randColInt);
+                    }
+                }
+            }
         }
     }
 }
